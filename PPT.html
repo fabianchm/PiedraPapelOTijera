@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Piedra Papel Tijera</title>
+    <link rel="stylesheet" href="css/pptstyle.css">
+  </head>
+  <body>
+    <script type="text/javascript">
+      var rndimg0, rndimg1, rndimg2, rndimg3, rndimg4;
+      var time = 0;
+      var counter;
+      var win, select, result;
+      var w;
+      var s0,s1,s2;
+      var nimg = 0;
+      var n = 0;
+      var cont;
+      var op = 0.8;
+      var wins = 0;
+      var loses = 0;
+      var ties = 0;
+
+      var images = ["img/piedra.jpg","img/papel.jpg","img/tijera.jpg"];
+
+
+      function insertar(value , resu){
+        var rnd = value;
+        var r = resu;
+        var aux;
+        var capa = document.getElementById("ult");
+        if(nimg == 5){
+          document.getElementById("imgU0").src = document.getElementById("imgU1").src;
+          document.getElementById("imgU0").style.borderColor = document.getElementById("imgU1").style.borderColor;
+
+          document.getElementById("imgU1").src = document.getElementById("imgU2").src;
+          document.getElementById("imgU1").style.borderColor = document.getElementById("imgU2").style.borderColor;
+
+          document.getElementById("imgU2").src = document.getElementById("imgU3").src;
+          document.getElementById("imgU2").style.borderColor = document.getElementById("imgU3").style.borderColor;
+
+          document.getElementById("imgU3").src = document.getElementById("imgU4").src;
+          document.getElementById("imgU3").style.borderColor = document.getElementById("imgU4").style.borderColor;
+
+          /*var rnd = value;
+          var imag = document.createElement("img");
+          var capa = document.getElementById("ult");*/
+          document.getElementById("imgU4").src = images[rnd];
+          if(r == 1){
+            document.getElementById("imgU4").style.borderColor = "green";
+          }
+          if(r==0){
+            document.getElementById("imgU4").style.borderColor = "yellow";
+          }
+          if(r==-1){
+            document.getElementById("imgU4").style.borderColor = "red";
+          }
+
+          document.getElementById("imgU0").style.opacity = "0.2";
+          document.getElementById("imgU1").style.opacity = "0.4";
+          document.getElementById("imgU2").style.opacity = "0.6";
+          document.getElementById("imgU3").style.opacity = "0.8";
+          document.getElementById("imgU4").style.opacity = "1";
+        }else{
+          if(nimg == 0){
+            var imag = document.createElement("img");
+            imag.src = images[rnd];
+            imag.id = "imgU" + n;
+            imag.border = "2px";
+            if(r == 1){
+              imag.style.borderColor = "green";
+            }
+            if(r==0){
+              imag.style.borderColor = "yellow";
+            }
+            if(r==-1){
+              imag.style.borderColor = "red";
+            }
+            capa.appendChild(imag);
+            var esp = document.createElement("br");
+            capa.appendChild(esp);
+            nimg++;
+            n++;
+
+          }else{
+            //var rnd = value;
+            var imag = document.createElement("img");
+            imag.src = images[rnd];
+            imag.id = "imgU" + n;
+            imag.border = "2px";
+            if(r == 1){
+              imag.style.borderColor = "green";
+            }
+            if(r==0){
+              imag.style.borderColor = "yellow";
+            }
+            if(r==-1){
+              imag.style.borderColor = "red";
+            }
+            op = 0.2;
+            cont = n - 1;
+            for (var i = 0; i < n; i++) {
+              document.getElementById("imgU" + i).style.opacity = op;
+              op += 0.2;
+            }
+
+            aux = document.getElementById("imgU" + cont)
+            capa.insertBefore(imag, aux);
+            var esp = document.createElement("br");
+            capa.insertBefore(esp, aux);
+            nimg++;
+            n++;
+            /*document.getElementById("imgU0").style.opacity = "0.6";
+            document.getElementById("imgU1").style.opacity = "0.6";
+            document.getElementById("imgU2").style.opacity = "0.6";
+            document.getElementById("imgU3").style.opacity = "0.6";
+            document.getElementById("imgU4").style.opacity = "0.6";*/
+          }
+        }
+      }
+
+      function jugar(){
+        if(!document.getElementById("piedra").checked && !document.getElementById("papel").checked && !document.getElementById("tijera").checked){
+          document.getElementById("solucion").style.visibility = "visible";
+          document.getElementById("solucion").style.backgroundColor = "#1E1B14";
+          document.getElementById("sol").innerHTML = "!Tienes que elegir una opción!";
+        }else{
+          document.getElementById("solucion").style.visibility = "hidden";
+          document.getElementById("tempo").innerHTML = "3";
+          cargar();
+        }
+      }
+      function cargar(){
+        document.getElementById("sol").innerHTML = "";
+        document.getElementById("play").disabled = true;
+        document.getElementById("piedra").disabled = true;
+        document.getElementById("papel").disabled = true;
+        document.getElementById("tijera").disabled = true;
+        //Generar 5 randoms
+        rndimg0 = Math.floor(Math.random()*3);
+        rndimg1 = Math.floor(Math.random()*3);
+        rndimg2 = Math.floor(Math.random()*3);
+        rndimg3 = Math.floor(Math.random()*3);
+        rndimg4 = Math.floor(Math.random()*3);
+        //Cada imagen es seleccionada por cada random
+        document.getElementById("img0").src = images[rndimg0];
+        document.getElementById("img1").src = images[rndimg1];
+        document.getElementById("img2").src = images[rndimg2];
+        document.getElementById("img3").src = images[rndimg3];
+        document.getElementById("img4").src = images[rndimg4];
+        //Empezar a rotar
+        var v = setInterval(function(){
+          rndimg0 = rndimg1;
+          rndimg1 = rndimg2;
+          rndimg2 = rndimg3;
+          rndimg3 = rndimg4;
+          //Las 4 primeras imagenes son la anterior
+          document.getElementById("img0").src = images[rndimg0];
+          document.getElementById("img1").src = images[rndimg1];
+          document.getElementById("img2").src = images[rndimg2];
+          document.getElementById("img3").src = images[rndimg3];
+          //Genero un 5º random que sera la quinta imagen
+          rndimg4 = Math.floor(Math.random()*3);
+          document.getElementById("img4").src = images[rndimg4];
+          //Añado 1 al timer
+          time++;
+
+          if(time == 5){
+            document.getElementById("tempo").innerHTML = "2";
+            document.getElementById("tempo").style.opacity = "1";
+          }
+          if(time == 10){
+            document.getElementById("tempo").innerHTML = "1";
+            document.getElementById("tempo").style.opacity = "1";
+          }
+          if(time == 15){
+
+            //Cuando el timer llega al limite detengo el setInterval
+            clearInterval(v);
+            //Reinicio el timer
+            time = 0;
+
+            document.getElementById("tempo").innerHTML = "0";
+            document.getElementById("tempo").style.opacity = "1";
+
+            document.getElementById("play").disabled = false;
+            document.getElementById("piedra").disabled = false;
+            document.getElementById("papel").disabled = false;
+            document.getElementById("tijera").disabled = false;
+
+            //w = images[rndimg2];
+            comprobar();
+          }
+        }, 300);
+
+      }
+      function comprobar(){
+        //Guardo en win que selecciona la ia
+        if(images[rndimg2] == images[0]){
+          win = 0;
+        }
+        if(images[rndimg2] == images[1]){
+          win = 1;
+        }
+        if(images[rndimg2] == images[2]){
+          win = 2;
+        }
+        //Guardo en select quien ha seleccionado
+        if(document.getElementById("piedra").checked)
+          select = 0;
+        if(document.getElementById("papel").checked)
+          select = 1;
+        if(document.getElementById("tijera").checked)
+          select = 2;
+        //Compruebo quien gana
+        if(select == win){
+          document.getElementById("solucion").style.visibility = "visible";
+          document.getElementById("sol").innerHTML = "!Empate!";
+          ties++;
+          document.getElementById("solucion").style.backgroundColor = "#FFC000";
+          result = 0;
+        }
+        if(select == 0 && win == 2){
+          document.getElementById("solucion").style.visibility = "visible";
+          document.getElementById("sol").innerHTML = "!Ganaste!";
+          wins++;
+          document.getElementById("solucion").style.backgroundColor = "#1AE621";
+          result = 1;
+        }
+        if(select == 0 && win == 1){
+          document.getElementById("solucion").style.visibility = "visible";
+          document.getElementById("sol").innerHTML = "!Perdiste!";
+          loses++;
+          document.getElementById("solucion").style.backgroundColor = "#EB0017";
+          result = -1;
+        }
+        if(select == 1 && win == 2){
+          document.getElementById("solucion").style.visibility = "visible";
+          document.getElementById("sol").innerHTML = "!Perdiste!";
+          loses++;
+          document.getElementById("solucion").style.backgroundColor = "#EB0017";
+          result = -1;
+        }
+        if(select == 1 && win == 0){
+          document.getElementById("solucion").style.visibility = "visible";
+          document.getElementById("sol").innerHTML = "!Ganaste!";
+          wins++;
+          document.getElementById("solucion").style.backgroundColor = "#1AE621";
+          result = 1;
+        }
+        if(select == 2 && win == 0){
+          document.getElementById("solucion").style.visibility = "visible";
+          document.getElementById("sol").innerHTML = "!Perdiste!";
+          loses++;
+          document.getElementById("solucion").style.backgroundColor = "#EB0017";
+          result = -1;
+        }
+        if(select == 2 && win == 1){
+          document.getElementById("solucion").style.visibility = "visible";
+          document.getElementById("sol").innerHTML = "!Ganaste!";
+          wins++;
+          document.getElementById("solucion").style.backgroundColor = "#1AE621";
+          result = 1;
+        }
+
+        insertar(win, result);
+
+        stats();
+      }
+      function stats(){
+        var total = wins + ties + loses;
+        var wpc = (wins * 100)/total;
+        var tpc = (ties * 100)/total;
+        var lpc = (loses * 100)/total;
+        wpc = wpc + "%";
+        tpc = tpc + "%";
+        lpc = lpc + "%";
+        document.getElementById("g").style.width = wpc;
+        document.getElementById("y").style.width = tpc;
+        document.getElementById("r").style.width = lpc;
+
+        document.getElementById("yac").innerHTML = "Victorias: " + wins + " - Empates: " + ties + " - Derrotas: " + loses;
+      }
+
+    </script>
+      <div class="bloque">
+        <br>
+       <div class="title">
+         <img src="img/titulo.png" id="title" alt="" />
+       </div>
+       <br>
+       <div class="select">
+        <p>Elige tu opción:</p>
+        <label><input type="radio" name="ppt" id="piedra" value="piedra">  <img src="img/piedra.jpg" alt="" id="imgs0"/></label>
+        <label><input type="radio" name="ppt" id="papel" value="papel">  <img src="img/papel.jpg" alt="" id="imgs1"/></label>
+        <label><input type="radio" name="ppt" id="tijera" value="tijera">  <img src="img/tijera.jpg" alt="" id="imgs2"/></label>
+        <br><br>
+        <button onclick="jugar()" id="play"> JUGAR </button>
+        <br><br>
+       </div>
+       <div class="tira" id="tiraid">
+         <img src="img/piedra.jpg" alt="" id="img0"/>
+         <img src="img/piedra.jpg" alt="" id="img1"/>
+         <img src="img/papel.jpg" alt="" id="img2"/>
+         <img src="img/tijera.jpg" alt="" id="img3"/>
+         <img src="img/piedra.jpg" alt="" id="img4"/>
+       </div>
+       <br><br>
+       <div class="temp">
+         <p id="tempo">
+
+         </p>
+       </div>
+       <br><br>
+       <div class="solucion" id="solucion">
+         <p id="sol">
+         </p>
+       </div>
+       <br><br>
+       <div class="wr">
+        <div class="green" id="g"></div>
+        <div class="yellow" id="y"></div>
+        <div class="red" id="r"></div>
+       </div>
+       <br>
+       <p id="yac">
+         Victorias: 0 - Empates: 0 - Derrotas: 0
+       </p>
+     </div>
+     <div class="ult" id="ult">
+         <br>
+        <p>Últimas Jugadas</p>
+        <br>
+     </div>
+  </body>
+</html>
